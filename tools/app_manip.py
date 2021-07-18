@@ -2,12 +2,11 @@ from flask import Flask, make_response
 import json
 import os
 
-from db_config import USERNAME, PASSWORD, HOST, SECRET_KEY, APPNAME
+from db_config import USERNAME, PASSWORD, HOST, DB_NAME, SECRET_KEY, APPNAME
 
 app = Flask(APPNAME)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{0}:{1}@{2}/{3}'.format(
-	USERNAME, PASSWORD, HOST, "saddy$drive")
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{USERNAME}:{PASSWORD}@{HOST}/{DB_NAME}'
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
