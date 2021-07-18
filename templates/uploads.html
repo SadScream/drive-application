@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Загрузки</title>
+	<style type="text/css">
+		html,body {
+			background:#F3F0EC;
+			font-family: "Rawline";
+		}
+
+		#navigation-bar {
+			overflow: hidden;
+			position: absolute;
+			width: 100%;
+			top: 0%;
+			left: 0%;
+			height: 10%;
+			border: medium;
+			border-bottom: 2px solid #DADCE0;
+			min-height: 50px;
+		}
+
+		.navigation-link {
+			display: inline-block;
+			height: 100%;
+			margin: 0px 0px 0px 25px;
+		}
+
+		.navigation-link a {
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			top: 50%;
+			margin-top: -1.4em;
+			color: #473D3F;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 150%;
+			width: 10%;
+		}
+
+		#button-file-actions--box {
+			position: absolute;
+			left: 70%;
+			bottom: 25%;
+			width: 30%;
+			height: 50%;
+			/*background: #C2AA85;*/
+		}
+
+		.button-file-action {
+			background: #E5322D;
+			display: inline-block;
+			position: relative;
+			width: 48%;
+			left: 0%;
+			top: 21%;
+			font-size: 18px;
+			text-align: center;
+			font-weight: bold;
+			cursor: pointer;
+			margin-right: 1%;
+			border-radius: 25px;
+		}
+
+		.button-file-action:hover {
+			background:#161616;
+			transition: background 0.3s;
+		}
+
+		.button-vertical-text {
+			align-items: center;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+		}
+
+		.button-centered-text {
+			position: relative;
+			top: 50%;
+			margin-top: -0.725em;
+			width: 100%;
+			text-align: center;
+			color: white;
+		}
+
+		#box {
+			overflow: auto;
+			position: absolute;
+			/*background: #66DDAA;*/
+			padding-top: 0px;
+			padding-left: 10px;
+			top: 10%;
+			left: 0%;
+			width: 100%;
+			height: 90%;
+		}
+
+		.file-element-wrapper {
+			display: inline-block;
+			position: relative;
+			margin-bottom: 1%;
+			margin-right: 1%;
+			top: 15px;
+			width: 145px;
+			height: 200px;
+		}
+
+		.file-element {
+			overflow: auto;
+			position: absolute;
+			left: 0%;
+			top: 0%;
+			height: 100%;
+			width: 100%;
+			border: 2px solid silver;
+			border-radius: 8px;
+		}
+
+		.file-image {
+			position: absolute;
+			/*background: #C223D7;*/
+			left: 0%;
+			top: 0%;
+			height: 75%;
+			width: 100%;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
+		}
+
+		img {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+		}
+
+		.file-info {
+			display: flex;
+			align-items: center;
+			background: white;
+			position: absolute;
+			left: 0%;
+			top: 75%;
+			height: 25%;
+			width: 100%;
+			border-bottom-left-radius: 8px;
+			border-bottom-right-radius: 8px;
+		}
+
+		.file-info-name {
+			margin-left: 5%;
+			left: 0%;
+			top: 0%;
+			/*height: 0%;*/
+			width: 100%;
+			font-size: 100%;
+		}
+
+		[contenteditable="true"].file-info-name {
+			padding-left: 3px;
+			white-space: nowrap;
+			width: 90%;
+			overflow: hidden;
+		}
+
+		[contenteditable="true"].file-info-name br {
+			display: none;
+		}
+
+		[contenteditable="true"].file-info-name * {
+			display: inline;
+			white-space: nowrap;
+		}
+
+		.context-menu {
+			display: none;
+			position: absolute;
+			z-index: 10;
+			padding: 12px 0;
+			width: 240px;
+			background-color: #fff;
+			border: solid 1px #dfdfdf;
+			box-shadow: 1px 1px 2px #cfcfcf;
+		}
+
+		.context-menu--active {
+			display: block;
+		}
+
+		.context-menu__items {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.context-menu__item {
+			display: block;
+			margin-bottom: 4px;
+		}
+
+		.context-menu__item:last-child {
+			margin-bottom: 0;
+		}
+
+		.context-menu__link {
+			cursor: pointer;
+			display: block;
+			padding: 4px 12px;
+			color: #0066aa;
+			text-decoration: none;
+		}
+
+		.context-menu__link:hover {
+			color: #fff;
+			background-color: #0066aa;
+		}
+
+		@font-face {
+			font-family: "Rawline";
+			src: url({{font}}) format("truetype"); 
+			font-style: normal; 
+			font-weight: normal;
+		}
+
+	</style>
+</head>
+<body>
+	<div>
+		<div id="navigation-bar" class="navigation-bar">
+			<div class="navigation-link">
+				<a href="/">Главная</a>
+			</div>
+			<div class="navigation-link">
+				<a href="/uploads/">Загрузки</a>
+			</div>
+			<div class="navigation-link">
+				<a href="/exit/">Выход</a>
+			</div>
+
+			<div id="used-space" style="position: absolute; height: 100%; top: 0; right: 32%;">
+				<div id="used-space--info" style="position: relative; top: 50%; margin-top: -0.625em;">
+					
+				</div>
+			</div>
+
+			<div id="button-file-actions--box">
+				<div id="download-btn" class="button-file-action" onclick="buttonFileAction_clicked(event, 'download');">
+					<div class="button-vertical-text">
+						<div class="button-centered-text">
+							Download
+						</div>
+					</div>
+				</div>
+				<div id="delete-btn" class="button-file-action"  onclick="buttonFileAction_clicked(event, 'delete');">
+					<div class="button-vertical-text">
+						<div class="button-centered-text">
+							Delete
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="box"></div>
+	</div>
+
+	<nav id="context-menu" class="context-menu">
+		<ul class="context-menu__items">
+			<li class="context-menu__item">
+				<a class="context-menu__link" data-action="View" onclick="toggleMenuOff();showFile();">
+					Посмотреть
+				</a>
+			</li>
+
+			<li class="context-menu__item">
+				<a class="context-menu__link" data-action="Edit" onclick="toggleMenuOff();setFileEditingOn();">
+					Редактировать
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+<script type="text/javascript">
+
+function boxClicked(element) {
+	// реакция на клик по пространству вокруг файлов
+	// снимает выделение с кликнутого файла
+
+	if (clickedFile.status == 1) {
+		clickedFile.element.style.borderColor = 'silver';
+		clickedFile.element.style.borderWidth = '2px';
+		clickedFile.element = null;
+		clickedFile.status = 0;
+	}
+}
+
+function toggleMenuOn() {
+	// показываем меню путем добавления contextMenuActive в его класс
+
+	if ( menu.state != 1 ) {
+		menu.state = 1;
+		menu.element.classList.add(contextMenuActive);
+	}
+}
+
+function toggleMenuOff() {
+	if ( menu.state != 0 ) {
+		menu.state = 0;
+		menu.element.classList.remove(contextMenuActive);
+	}
+}
+
+function getPosition(e) {
+	var posx = 0;
+	var posy = 0;
+
+	if (!e)
+		var e = window.event;
+
+	if (e.pageX || e.pageY) {
+		posx = e.pageX;
+		posy = e.pageY;
+	} else if (e.clientX || e.clientY) {
+		posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+	}
+
+	return {
+		x: posx,
+		y: posy
+	}
+}
+
+function positionMenu(e) {
+	// позиционирование меню относительно места клика
+
+	let clickCoords = getPosition(e);
+	let clickCoordsX = clickCoords.x;
+	let clickCoordsY = clickCoords.y;
+
+	let menuWidth = menu.element.offsetWidth + 4;
+	let menuHeight = menu.element.offsetHeight + 4;
+
+	let windowWidth = window.innerWidth;
+	let windowHeight = window.innerHeight;
+
+	if ( (windowWidth - clickCoordsX) < menuWidth ) {
+		menu.element.style.left = windowWidth - menuWidth + "px";
+	} else {
+		menu.element.style.left = clickCoordsX + "px";
+    }
+
+    if ( (windowHeight - clickCoordsY) < menuHeight ) {
+    	menu.element.style.top = windowHeight - menuHeight + "px";
+    } else {
+    	menu.element.style.top = clickCoordsY + "px";
+    }
+}
+
+function buttonFileAction_clicked(e, method) {
+	// реакция на нажатие кнопок загрузки и удаления
+
+	if (clickedFile.status == 0)
+		return;
+
+	let url = new URL(origin_url+clickedFile.link);
+	let fileName = clickedFile.element.id;
+	// let url = origin_url+clickedFile.link;
+
+	if (method == "download") {
+		let params = {download: 1}
+		url.search = new URLSearchParams(params).toString();
+		// decodeURI(url.href) => normalize
+
+		// url = url+"?download=1";
+
+		fetch(url, {
+			method: "GET"
+		})
+		.then(response => {
+			return response.blob();
+		})
+		.then(blob => {
+			// var file = window.URL.createObjectURL(blob);
+			// window.location.assign(file);
+
+			let url = window.URL.createObjectURL(blob);
+			let a = document.createElement('a');
+			a.href = url;
+			a.download = fileName;
+			document.body.appendChild(a);
+			a.click(); 
+			a.remove();
+		});
+	}
+	else if (method == "delete") {
+		fetch(url, {
+			method: "DELETE"
+		})
+		.then(() => {location.reload()});
+	}
+}
+
+function fileClicked(element) {
+	// при клике по файлу создаем выделение
+
+	if (element.className != "file-element") {
+		element = element.parentNode;
+
+		if (element.className != "file-element") {
+			element = element.parentNode;
+		}
+	}
+
+	if (clickedFile.status == 1) { // set preview element selection to null
+		clickedFile.element.style.borderColor = 'silver';
+		clickedFile.element.style.borderWidth = '2px';
+	}
+
+	let fileName = element.id;
+
+	clickedFile.element = element;
+	clickedFile.status = 1;
+	clickedFile.link = `/uploads/${fileName}`;
+
+	fileFocused(fileName, 1);
+
+	clickedFile.element.style.borderColor = '#0FC0FC';
+	clickedFile.element.style.borderWidth = '3px';
+}
+
+function fileContextMenu(e, fileName) {
+	// реакция на вызов контекстного меню во время наведения на него
+
+	if (clickedFile.status == 0 || clickedFile.element.id != fileName || clickedFile.focused == 0) {
+		// если файл не выбран, или выбран не тот файл, на котором вызывается контекстное меню
+		// или в данный момент фокус на файле отсутствует, то не создаем контекстное меню
+
+		return;
+	}
+
+	setFileEditingOff(); // прекращаем редактирование
+	positionMenu(e); // устанавливаем позицию окна меню
+	toggleMenuOn(); // включаем меню
+}
+
+function fileFocused(fileName, status) {
+	// реакция на наведение мыши на файл
+
+	if (clickedFile.status == 1 && clickedFile.element.id == fileName) {
+		clickedFile.focused = status;
+	}
+}
+
+function showFile() {
+	console.log(origin_url+clickedFile.link);
+	window.open(origin_url+clickedFile.link, "_blank");
+}
+
+function setFileEditingOn() {
+	// начало редактирования файла
+
+	let fileNameElement = clickedFile.element.childNodes[1].childNodes[0];
+	fileNameElement.textContent = clickedFile.element.id;
+	fileNameElement.contentEditable = true;
+
+	let selection = window.getSelection();
+	let range = document.createRange();
+	range.selectNodeContents(fileNameElement);
+	selection.removeAllRanges();
+	selection.addRange(range);
+
+	clickedFile.editing = 1;
+}
+
+function setFileEditingOff() {
+	// прекращение редактирования файла
+
+	if (!clickedFile.editing) {
+		return;
+	}
+
+	let selection = window.getSelection();
+	selection.removeAllRanges();
+
+	let fileNameElement = clickedFile.element.childNodes[1].childNodes[0];
+	fileNameElement.contentEditable = false;
+	clickedFile.editing = 0;
+
+	if (fileNameElement.textContent == short_name(clickedFile.element.id)) {
+		return;
+	}
+	if (fileNameElement.textContent == clickedFile.element.id) {
+		fileNameElement.textContent = short_name(fileNameElement.textContent);
+		return;
+	}
+	if (!fileNameElement.textContent.trim().length) {
+		console.log("name is empty");
+		fileNameElement.textContent = clickedFile.element.id;
+	}
+
+	changeFileName(fileNameElement.textContent, fileNameElement, clickedFile.element);
+}
+
+async function changeFileName(toFileName, fileNameElement, parentElement) {
+	// отправка на сервер запроса на смену имени файла
+
+	let url = origin_url+clickedFile.link;
+
+	fetch(url, {
+		method: "PUT",
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({"name": toFileName})
+	})
+	.then((response) => {
+		if (response.ok) {
+			if (clickedFile.element == parentElement) {
+				clickedFile.link = `/uploads/${toFileName}`
+			}
+
+			parentElement.id = toFileName;
+			fileNameElement.textContent = short_name(toFileName);
+
+			parentElement.parentNode.oncontextmenu = function(e) {fileContextMenu(e, toFileName); return false;};
+			parentElement.parentNode.onmouseenter = function(e) {fileFocused(toFileName, 1);};
+			parentElement.parentNode.onmouseleave = function(e) {fileFocused(toFileName, 0);};
+		}
+		else {
+			if (response.status == 400)
+				alert("Ошибка. Неверный формат имени файла");
+			else
+				alert(`Неизвестная ошибка. Response: ${response.status}`);
+
+			throw new Error('Something went wrong');
+		}
+	})
+	.catch((error) => {
+  		fileNameElement.textContent = short_name(parentElement.id);
+	});
+}
+
+function setSize(event) {
+	// подгонка размера элементов под размер экрана
+
+	let file_elements = document.querySelectorAll(".file-element-wrapper");
+	let button_elements = document.querySelectorAll(".button-file-action");
+	let box_div = document.getElementById("box");
+
+	if (window.innerWidth > window.innerHeight) {
+		// горизонтально
+
+		for (el of file_elements) {
+			el.style.width = "170px";
+			el.style.height = "190px";
+		}
+
+		for (el of button_elements) {
+			el.style.height = '100%';
+			el.style.top = '0%';
+		}
+	}
+	else if (window.innerWidth <= window.innerHeight) {
+		// вертикально
+
+		for (el of file_elements) {
+			el.style.width = "290px";
+			el.style.height = "400px";
+			el.style.marginRight = '2%'
+		}
+
+		for (el of button_elements) {
+			el.style.height = '50%';
+			el.style.top = '25%';
+		}
+	}
+}
+
+function docClickHandler(event) {
+	// обработка кликов левой кнопкой мыши
+
+	let element = event.target;
+
+	if (!element.className.includes("context-menu") && menu.state == 1) {
+		// если кликнутый элемент не является элементом контекстного меню,
+		// а также в данный момент меню открыто, то закрываем его
+
+		console.log("menu off");
+		toggleMenuOff();
+	}
+	if (
+			(
+				!(element.className=="file-info-name") || 
+				(element.className=="file-info-name" && 
+					element.parentNode.parentNode != clickedFile.element)
+				) && 
+			!element.className.includes("context-menu") &&
+			clickedFile.editing==1
+		) {
+		// если клик совершен не по редактируемому полю, а также
+		// в данный момент поле редактируется, то завершаем редактирование
+
+		console.log("file editing off");
+		setFileEditingOff();
+	}
+
+	if (element.id == "box") {
+		// клик по элементу 'box' означает необходимость снятия выделения
+		// с выделенного файла
+
+		// console.log("box clicked");
+		boxClicked(element);
+	}
+	else if (element.className.includes("file", 0)) {
+		// совершен клик по файлу
+
+		// console.log("file clicked");
+		fileClicked(element);
+	}
+}
+
+function short_name(name) {
+	// если name длинне 13 символов, то обрезаем
+
+	if (name.length > 13) {
+		name = name.substr(0,12)+"...";
+	}
+	return name;
+}
+
+function createFiles() {
+	// получение файлов с сервера и их отображение
+
+	let url = origin_url+'/files';
+
+	fetch(url, {
+		method: "GET"
+	})
+	.then(response => {
+		return response.json();
+	})
+	.then(uploads => {
+		box_div = document.getElementById("box");
+		uploads = uploads["uploads"];
+
+		for (let data of uploads) {
+			let file_element_wrapper = document.createElement("div");
+			file_element_wrapper.className = "file-element-wrapper";
+			file_element_wrapper.title = data['name'];
+			file_element_wrapper.oncontextmenu = function(e) {fileContextMenu(e, data['name']); return false;};
+			file_element_wrapper.onmouseenter = function(e) {fileFocused(data['name'], 1);};
+			file_element_wrapper.onmouseleave = function(e) {fileFocused(data['name'], 0);};
+
+			box_div.appendChild(file_element_wrapper);
+
+			let file_element = document.createElement("div");
+			file_element.id = data['name'];
+			file_element.className = "file-element";
+
+			file_element_wrapper.appendChild(file_element);
+
+			let file_image = document.createElement("div");
+			file_image.className = "file-image";
+			source = document.createElement("img");
+			source.className = "file-image-src";
+
+			if (data['type'].includes('image')) {
+				source.src = data['small_url'];
+			}
+			else {
+				source.src = '{{file_icon}}';
+			}
+
+			file_image.appendChild(source)
+
+			let file_info = document.createElement("div");
+			file_info.className = "file-info";
+			file_info_name = document.createElement("div");
+			file_info_name.className = "file-info-name";
+			file_info_name.textContent = short_name(data['name']);
+			file_info_name.spellcheck = false;
+
+			file_info.appendChild(file_info_name);
+
+			file_element.appendChild(file_image);
+			file_element.appendChild(file_info)
+		}
+	})
+}
+
+function getSpace() {
+	let url = origin_url+"/users/";
+
+	fetch(url, {
+		method:'GET'
+	})
+	.then(response => {
+		return response.json();
+	})
+	.then(json => {
+		users = json["users"]
+
+		for (user of users) {
+			if (user["is_current"]) {
+				all_space = user["space"];
+				used_space = user["used_space"];
+				// console.log(user);
+			}
+		}
+
+		el = document.getElementById("used-space--info");
+		el.textContent = `${Math.round(used_space/1024*10)/10}/${all_space/1024} MB`;
+	});
+}
+
+let origin_url = document.location.origin
+let contextMenuActive = "context-menu--active";
+
+let clickedFile = {
+	element: null,
+	status: 0, // выбран ли какой либо файл
+	focused: 0, // установлен ли курсор на файле
+	editing: 0, // редактируется ли в данный момент файл
+	link: "" // ссылка на выбранный файл
+};
+
+let menu = {
+	element: document.querySelector("#context-menu"), // объект меню
+	state: 0 // 1 - меню открыто, иначе - 0
+}
+
+setSize(null);
+window.addEventListener('resize', setSize, true);
+document.body.addEventListener("click", docClickHandler)
+
+getSpace();
+createFiles();
+
+</script>
+</body>
+</html>
