@@ -1,6 +1,6 @@
 ﻿__pycache__
 
-additional_pages.py
+/pages/additional/*
 db_config.py
 
 /uploads/*
@@ -11,8 +11,3 @@ db_config.py
 !registration.html
 !upload.html
 !uploads.html
-
-*.png
-*.gif
-*.jpg
-!file_icon.png

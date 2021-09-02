@@ -1,22 +1,9 @@
-from flask import Flask, make_response
-import json
-import os
-
-from db_config import USERNAME, PASSWORD, HOST, DB_NAME, SECRET_KEY, APPNAME
-
-app = Flask(APPNAME)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{USERNAME}:{PASSWORD}@{HOST}/{DB_NAME}'
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['DEBUG'] = True
-
-
-STATIC_FOLDER = os.path.join(app.root_path, "static")
+from flask import make_response
+from json import dumps
 
 
 def json_response(data: dict, code: int = 200):
-	response = make_response(json.dumps(data, ensure_ascii=False), code)
+	response = make_response(dumps(data, ensure_ascii=False), code)
 	response.headers["Content-Type"] = "application/json"
 
 	return response

@@ -3,13 +3,11 @@ from flask_login import LoginManager, login_user
 from sqlalchemy import exc
 
 from .database import db, User
-from .app_manip import app
 
+login_manager = LoginManager()
 
-login_manager = LoginManager(app)
-
-UPLOAD_FOLDER = os.path.join(app.root_path, "uploads")
-SMALL_IMAGE_FOLDER = os.path.join(app.root_path, "uploads_small")
+UPLOAD_FOLDER = "uploads"
+SMALL_IMAGE_FOLDER = "uploads_small"
 
 
 @login_manager.user_loader
@@ -21,7 +19,14 @@ def load_user(user_id):
 
 
 def login_and_create_folder(user_obj, remember):
-	login_user(user_obj, remember=remember)  # remember - сохранить ли сессию после закрытия браузера
+	'''
+	:param user_obj: пользователь
+	:type user_obj: `tools.database.User`
+	:remember: сохранить ли сессию после закрытия браузера
+	:type remember: `bool`
+	'''
+
+	login_user(user_obj, remember=remember)
 
 	user_id = user_obj.user_id
 	user_default_folder = os.path.join(UPLOAD_FOLDER, str(user_id))

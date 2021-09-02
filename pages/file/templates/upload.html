@@ -119,7 +119,7 @@
 				<a href="/uploads/">Загрузки</a>
 			</div>
 			<div class="navigation-link">
-				<a href="exit/">Выход</a>
+				<a href="/logout/">Выход</a>
 			</div>
 		</div>
 		<form enctype="multipart/form-data" onsubmit="send(); return false;">
@@ -161,7 +161,7 @@
 function send() {
 	let input = document.querySelector('input[type="file"]');
 	let data = new FormData();
-	let url = document.location.origin+"/upload/";
+	let url = document.location.origin+"/api/uploads/";
 
 	data.append('file', input.files[0]);
 

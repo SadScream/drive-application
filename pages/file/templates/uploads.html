@@ -236,7 +236,7 @@
 				<a href="/uploads/">Загрузки</a>
 			</div>
 			<div class="navigation-link">
-				<a href="/exit/">Выход</a>
+				<a href="/logout/">Выход</a>
 			</div>
 
 			<div id="used-space" style="position: absolute; height: 100%; top: 0; right: 32%;">
@@ -365,11 +365,12 @@ function buttonFileAction_clicked(e, method) {
 	if (clickedFile.status == 0)
 		return;
 
-	let url = new URL(origin_url+clickedFile.link);
+	
 	let fileName = clickedFile.element.id;
-	// let url = origin_url+clickedFile.link;
 
 	if (method == "download") {
+		let url = new URL(origin_url+clickedFile.link);
+
 		let params = {download: 1}
 		url.search = new URLSearchParams(params).toString();
 		// decodeURI(url.href) => normalize
@@ -396,6 +397,8 @@ function buttonFileAction_clicked(e, method) {
 		});
 	}
 	else if (method == "delete") {
+		let url = new URL(origin_url+"/api"+clickedFile.link);
+
 		fetch(url, {
 			method: "DELETE"
 		})
@@ -507,7 +510,7 @@ function setFileEditingOff() {
 async function changeFileName(toFileName, fileNameElement, parentElement) {
 	// отправка на сервер запроса на смену имени файла
 
-	let url = origin_url+clickedFile.link;
+	let url = origin_url+'/api'+clickedFile.link;
 
 	fetch(url, {
 		method: "PUT",
@@ -634,7 +637,7 @@ function short_name(name) {
 function createFiles() {
 	// получение файлов с сервера и их отображение
 
-	let url = origin_url+'/files';
+	let url = origin_url+'/api/uploads/';
 
 	fetch(url, {
 		method: "GET"
@@ -692,7 +695,7 @@ function createFiles() {
 }
 
 function getSpace() {
-	let url = origin_url+"/users/";
+	let url = origin_url+"/api/users/";
 
 	fetch(url, {
 		method:'GET'

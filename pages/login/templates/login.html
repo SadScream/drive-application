@@ -141,13 +141,17 @@
 						let q = document.querySelectorAll(".flash")[0];
 						q.style.color = "red";
 					}
+					else if (category == "success") {
+						let q = document.querySelectorAll(".flash")[0];
+						q.style.color = "green";
+					}
 				</script>
 
 				<spam class="{{ category }}">{{ message }}</spam>
 			{% endfor %}
 		</div>
 		
-		<form action="{{url_for('login')}}" onsubmit="login();return false;" method="post">
+		<form action="{{url_for('user_api.login')}}" onsubmit="login();return false;" method="post">
 			<div class="txt_field">
 				<input type="text" name="username" required>
 				<span></span>
@@ -183,7 +187,7 @@ function login() {
 		}	
 	}
 
-	let url = document.location.origin+"/login/";
+	let url = document.location.origin+"/api/login/";
 	let headers = new Headers();
 
 	headers.set('Authorization', 'Basic ' + base64.encode(username + ":" + password));
