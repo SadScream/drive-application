@@ -21,7 +21,7 @@ from pages.file.file import file_page
 try:
 	from pages.additional.additional import additional_page
 except ModuleNotFoundError:
-	pass
+	additional_page = None
 
 app = Flask(APPNAME)
 
@@ -32,7 +32,10 @@ app.config['DEBUG'] = True
 
 app.register_blueprint(login_page)
 app.register_blueprint(file_page)
-app.register_blueprint(additional_page)
+
+if additional_page:
+	app.register_blueprint(additional_page)
+	
 app.register_blueprint(file_api, url_prefix="/api")
 app.register_blueprint(user_api, url_prefix="/api")
 
