@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user, logout_user
 
-from tools.app_manip import json_response
+from tools.json_manip import json_response
 from tools.login_manip import login_and_create_folder
 from tools.database import (
 	db, Status, User

@@ -5,7 +5,7 @@ from flask import Blueprint, request, safe_join
 from flask_login import login_required, current_user
 
 from tools.file_manip import get_save_file, update_file_info
-from tools.app_manip import json_response
+from tools.json_manip import json_response
 from tools.database import (
 	db, File, Status
 )
