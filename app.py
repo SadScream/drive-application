@@ -29,6 +29,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
 
+# registering blueprints
 app.register_blueprint(login_page)
 app.register_blueprint(file_page)
 
@@ -38,24 +39,51 @@ if additional_page:
 app.register_blueprint(file_api, url_prefix="/api")
 app.register_blueprint(user_api, url_prefix="/api")
 
+# initialize objects
 db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login_page.sign_in'  # куда идет перенаправление для логина
 
+# create taplates environment
 templateLoader = jinja2.FileSystemLoader(searchpath="./static/styles")  # обработчик для собственных jinja шаблонов
-
 templateEnv = jinja2.Environment(loader=templateLoader)
 templateEnv.globals.update(url_for=url_for)  # добавляем функцию url_for в среду jinja
+
+# other
+cached_data = [  # каким типам файлов разрешено сохраняться в кэше
+	"application/octet-stream", "application/javascript; charset=utf-8",
+	"text/html; charset=utf-8", "text/css; charset=utf-8"
+]
 
 
 @app.route("/static/styles/<file>")
 def css_render(file):
+	'''
+	рендеринг шаблонов css
+	нужен, в частности, для файла base.css
+	'''
+
 	template = templateEnv.get_template(file)
 	headers = {
 		"Content-Type": "text/css; charset=utf-8"
 	}
 	response = Response(template.render(), status=200, headers=headers)
 	return response
+
+
+@app.after_request
+def add_header(r):
+	'''
+	запрет на хранение в кэше всего, что не входит в список
+	mymetype'ов `cached_data`
+	'''
+
+	if r.headers["Content-Type"] in cached_data:
+		r.headers["Cache-Control"] = "public, max-age=43200"
+	else:
+		r.headers["Cache-Control"] = "public, max-age=0"
+
+	return r
 
 
 if __name__ == "__main__":
