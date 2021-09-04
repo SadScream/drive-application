@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import os
-
-from flask import Flask
+import jinja2
+from flask import Flask, url_for, Response
 
 from tools.login_manip import login_manager
 from tools.database import db, fill_status_defaults, add_admin
@@ -43,7 +42,21 @@ db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login_page.sign_in'  # куда идет перенаправление для логина
 
-# STATIC_FOLDER = os.path.join(app.root_path, "static")
+templateLoader = jinja2.FileSystemLoader(searchpath="./static/styles")  # обработчик для собственных jinja шаблонов
+
+templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv.globals.update(url_for=url_for)  # добавляем функцию url_for в среду jinja
+
+
+@app.route("/static/styles/<file>")
+def css_render(file):
+	template = templateEnv.get_template(file)
+	headers = {
+		"Content-Type": "text/css; charset=utf-8"
+	}
+	response = Response(template.render(), status=200, headers=headers)
+	return response
+
 
 if __name__ == "__main__":
 	with app.app_context():

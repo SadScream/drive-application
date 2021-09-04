@@ -9,9 +9,7 @@ file_page = Blueprint('file_page', __name__, template_folder="templates", static
 @file_page.route("/", methods=['GET'])
 @login_required
 def upload_page():
-	font = url_for('static', filename='font/rawline-500-cirylic.woff2')
-
-	return render_template("upload.html", font=font)
+	return render_template("upload.html")
 
 
 @file_page.route('/uploads/', methods=['GET'])

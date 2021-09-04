@@ -3,42 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<title>Загрузки</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/nav-bar.css')}}" />
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/context-menu.css')}}" />
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles/base.css')}}" />
 	<style type="text/css">
-		html,body {
-			background:#F3F0EC;
-			font-family: "Rawline";
-		}
-
-		#navigation-bar {
-			overflow: hidden;
-			position: absolute;
-			width: 100%;
-			top: 0%;
-			left: 0%;
-			height: 10%;
-			border: medium;
-			border-bottom: 2px solid #DADCE0;
-			min-height: 50px;
-		}
-
-		.navigation-link {
-			display: inline-block;
-			height: 100%;
-			margin: 0px 0px 0px 25px;
-		}
-
-		.navigation-link a {
-			position: relative;
-			display: inline-block;
-			vertical-align: middle;
-			top: 50%;
-			margin-top: -1.4em;
-			color: #473D3F;
-			text-decoration: none;
-			font-weight: 600;
-			font-size: 150%;
-			width: 10%;
-		}
 
 		#button-file-actions--box {
 			position: absolute;
@@ -174,70 +142,11 @@
 			white-space: nowrap;
 		}
 
-		.context-menu {
-			display: none;
-			position: absolute;
-			z-index: 10;
-			padding: 12px 0;
-			width: 240px;
-			background-color: #fff;
-			border: solid 1px #dfdfdf;
-			box-shadow: 1px 1px 2px #cfcfcf;
-		}
-
-		.context-menu--active {
-			display: block;
-		}
-
-		.context-menu__items {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		.context-menu__item {
-			display: block;
-			margin-bottom: 4px;
-		}
-
-		.context-menu__item:last-child {
-			margin-bottom: 0;
-		}
-
-		.context-menu__link {
-			cursor: pointer;
-			display: block;
-			padding: 4px 12px;
-			color: #0066aa;
-			text-decoration: none;
-		}
-
-		.context-menu__link:hover {
-			color: #fff;
-			background-color: #0066aa;
-		}
-
-		@font-face {
-			font-family: "Rawline";
-			src: url({{font}}) format("truetype"); 
-			font-style: normal; 
-			font-weight: normal;
-		}
-
 	</style>
 </head>
 <body>
 	<div>
-		<div id="navigation-bar" class="navigation-bar">
-			<div class="navigation-link">
-				<a href="/">Главная</a>
-			</div>
-			<div class="navigation-link">
-				<a href="/uploads/">Загрузки</a>
-			</div>
-			<div class="navigation-link">
-				<a href="/logout/">Выход</a>
-			</div>
+		<div id="navigation-bar">
 
 			<div id="used-space" style="position: absolute; height: 100%; top: 0; right: 32%;">
 				<div id="used-space--info" style="position: relative; top: 50%; margin-top: -0.625em;">
@@ -282,6 +191,8 @@
 		</ul>
 	</nav>
 
+<script src="{{url_for('static', filename='packages/nav-bar.js')}}"></script>
+<script src="{{url_for('static', filename='packages/context-menu.js')}}"></script>
 <script type="text/javascript">
 
 function boxClicked(element) {
@@ -294,69 +205,6 @@ function boxClicked(element) {
 		clickedFile.element = null;
 		clickedFile.status = 0;
 	}
-}
-
-function toggleMenuOn() {
-	// показываем меню путем добавления contextMenuActive в его класс
-
-	if ( menu.state != 1 ) {
-		menu.state = 1;
-		menu.element.classList.add(contextMenuActive);
-	}
-}
-
-function toggleMenuOff() {
-	if ( menu.state != 0 ) {
-		menu.state = 0;
-		menu.element.classList.remove(contextMenuActive);
-	}
-}
-
-function getPosition(e) {
-	var posx = 0;
-	var posy = 0;
-
-	if (!e)
-		var e = window.event;
-
-	if (e.pageX || e.pageY) {
-		posx = e.pageX;
-		posy = e.pageY;
-	} else if (e.clientX || e.clientY) {
-		posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-		posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-	}
-
-	return {
-		x: posx,
-		y: posy
-	}
-}
-
-function positionMenu(e) {
-	// позиционирование меню относительно места клика
-
-	let clickCoords = getPosition(e);
-	let clickCoordsX = clickCoords.x;
-	let clickCoordsY = clickCoords.y;
-
-	let menuWidth = menu.element.offsetWidth + 4;
-	let menuHeight = menu.element.offsetHeight + 4;
-
-	let windowWidth = window.innerWidth;
-	let windowHeight = window.innerHeight;
-
-	if ( (windowWidth - clickCoordsX) < menuWidth ) {
-		menu.element.style.left = windowWidth - menuWidth + "px";
-	} else {
-		menu.element.style.left = clickCoordsX + "px";
-    }
-
-    if ( (windowHeight - clickCoordsY) < menuHeight ) {
-    	menu.element.style.top = windowHeight - menuHeight + "px";
-    } else {
-    	menu.element.style.top = clickCoordsY + "px";
-    }
 }
 
 function buttonFileAction_clicked(e, method) {
@@ -738,6 +586,10 @@ let menu = {
 setSize(null);
 window.addEventListener('resize', setSize, true);
 document.body.addEventListener("click", docClickHandler)
+
+addLink("Главная", "/");
+addLink("Загрузки", "/uploads/");
+addLink("Выход", "/logout/");
 
 getSpace();
 createFiles();

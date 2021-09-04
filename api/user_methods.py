@@ -17,7 +17,7 @@ def login():
 
 	-> HEADERS:
 		Authorization: Basic <username:password>  *BASE64*
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"message": str
 	}
@@ -57,7 +57,7 @@ def logout():
 	'''
 	Выход из учетной записи
 
-	:return: JSON {
+	:return: {
 		"ok": bool
 	}
 	'''
@@ -73,7 +73,7 @@ def get_user_info(user_id):
 	Возвращает информацию о пользователе с данным id
 
 	-> user_id:int
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"id": int,
 		"username": str,
@@ -114,7 +114,7 @@ def get_users():
 	то возвращается список всех пользователей, а иначе список из одного элемента -
 	информации о текущем пользователе
 
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"users": [
 			{

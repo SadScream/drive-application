@@ -1,0 +1,11 @@
+@font-face {
+	font-family: "Rawline";
+	src: url("{{url_for('static', filename='font/rawline-500-cirylic.woff2')}}") format("truetype"); 
+	font-style: normal; 
+	font-weight: normal;
+}
+
+html,body {
+	background:#F3F0EC;
+	font-family: "Rawline";
+}
