@@ -20,7 +20,7 @@ def post_file():
 	Загрузка файла на сервер
 
 	-> BODY: FILE
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"message": str
 	}
@@ -84,7 +84,7 @@ def post_file():
 def get_files():
 	'''
 	Возвращает список файлов текущего пользователя
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"uploads": [
 			{
@@ -130,10 +130,10 @@ def put_file(filename):
 	Принимает имя файла в URI и json объект в теле запроса с новым именем, на которое нужно поменять
 
 	-> filename: str
-	-> JSON {
+	-> {
 		"name": str
 	}
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"message": str
 	}
@@ -195,7 +195,7 @@ def delete_file(filename):
 	Принимает имя файла и удаляет файл с этим именем для данного пользователя
 
 	-> filename: str
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"message": str
 	}
@@ -236,7 +236,7 @@ def get_file(filename):
 	Принимает имя файла и возвращает информацию о нем
 
 	-> filename:str
-	:return: JSON {
+	:return: {
 		"ok": bool,
 		"id": int,
 		"name": str,

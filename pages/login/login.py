@@ -8,7 +8,7 @@ from tools.database import (
 	db, Status, User
 )
 
-login_page = Blueprint('login_page', __name__, template_folder="templates", static_folder="static", static_url_path='/')
+login_page = Blueprint('login_page', __name__, template_folder="templates", static_folder="static", static_url_path='/login')
 
 
 @login_page.route('/sign-up/', methods=['POST', 'GET'])

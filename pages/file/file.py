@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, render_template, url_for, request, send_file, abort
 from flask_login import login_required, current_user
 
-file_page = Blueprint('file_page', __name__, template_folder="templates", static_folder="static", static_url_path='/')
+file_page = Blueprint('file_page', __name__, template_folder="templates", static_folder="static", static_url_path='/file')
 
 
 @file_page.route("/", methods=['GET'])

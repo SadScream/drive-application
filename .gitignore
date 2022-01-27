@@ -1,4 +1,5 @@
 ﻿__pycache__
+.idea
 
 /pages/additional/*
 db_config.py
