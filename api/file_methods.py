@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 
 from tools.file_manip import get_save_file, update_file_info
 from tools.json_manip import json_response
-from tools.database import (
+from database.database import (
 	db, File, Status
 )
 
@@ -36,6 +36,8 @@ def post_file():
 
 		return json_response(data, 413)
 
+	file = None
+
 	if "file" in request.files:
 		file = request.files['file']
 	else:
@@ -52,7 +54,7 @@ def post_file():
 		allowed_space = db.session.query(Status).filter(
 			Status.status_id == current_user.status_id).first().available_size
 
-		if int(current_user.used_space) + file_size >= allowed_space:
+		if float(current_user.used_space) + file_size >= allowed_space:
 			data["ok"] = False
 			data["message"] = "Not enough free space"
 
@@ -221,7 +223,7 @@ def delete_file(filename):
 	
 	file_obj = db.session.query(File).filter(
 		File.owner_id == current_user.get_id(), File.filename == filename).first()
-	current_user.used_space = int(current_user.used_space) - file_obj.size
+	current_user.used_space = float(current_user.used_space) - float(file_obj.size)
 
 	db.session.delete(file_obj)
 	db.session.commit()

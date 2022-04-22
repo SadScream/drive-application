@@ -2,7 +2,7 @@ import os
 from flask_login import LoginManager, login_user
 from sqlalchemy import exc
 
-from .database import db, User
+from database.database import db, User
 
 login_manager = LoginManager()
 

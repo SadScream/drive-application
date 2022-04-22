@@ -47,10 +47,5 @@ def uploaded_file(filename):
 
 	if os.path.exists(path_to_file):
 		return send_file(path_to_file, as_attachment=to_download, cache_timeout=0)
-			
-	# response = json_response({
-	# 	"ok": False,
-	# 	"message": "File doesn't exist"
-	# }, 404)
 	
 	return abort(404)

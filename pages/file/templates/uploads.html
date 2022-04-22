@@ -563,7 +563,7 @@ function getSpace() {
 		}
 
 		el = document.getElementById("used-space--info");
-		el.textContent = `${Math.round(used_space/1024*10)/10}/${all_space/1024} MB`;
+		el.textContent = `${(used_space/1024).toFixed(2)}/${all_space/1024} MB`;
 	});
 }
 

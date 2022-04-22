@@ -4,7 +4,7 @@ from flask import (
 )
 from flask_login import login_required, current_user, logout_user
 
-from tools.database import (
+from database.database import (
 	db, Status, User
 )
 

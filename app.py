@@ -4,7 +4,7 @@ import jinja2
 from flask import Flask, url_for, Response
 
 from tools.login_manip import login_manager
-from tools.database import db, fill_status_defaults, add_admin
+from database.database import db, fill_status_defaults, add_admin
 from db_config import (
 	USERNAME, PASSWORD, HOST, DB_NAME, 
 	SECRET_KEY, APPNAME, ADMIN_USERNAME, ADMIN_EMAIL, 

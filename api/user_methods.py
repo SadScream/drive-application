@@ -3,7 +3,7 @@ from flask_login import login_required, current_user, logout_user
 
 from tools.json_manip import json_response
 from tools.login_manip import login_and_create_folder
-from tools.database import (
+from database.database import (
 	db, Status, User
 )
 
@@ -82,15 +82,11 @@ def get_user_info(user_id):
 		"is_current": bool
 	}
 	'''
-	# print(user_id)
 	user_obj = db.session.query(User).filter(User.user_id == user_id).first()
-	data = {
-		"ok": True
-	}
+	data = {"ok": True}
 
 	if user_obj:
-		status_obj = db.session.query(Status).filter(
-			Status.status_id == user_obj.status_id).first()
+		status_obj = db.session.query(Status).filter(Status.status_id == user_obj.status_id).first()
 		
 		data["id"] = user_obj.user_id
 		data["username"] = user_obj.username

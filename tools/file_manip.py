@@ -2,7 +2,7 @@ import os
 import mimetypes
 from flask import safe_join
 
-from .database import File, db
+from database.database import File, db
 from .image_manip import resize_image
 
 
@@ -22,21 +22,12 @@ def get_save_file(file, file_size, user_folder, filename, current_user):
 	file_url = safe_join("/uploads/", filename) + "?download=1"
 
 	file.save(pth)
-	current_user.used_space = int(current_user.used_space) + file_size
+	current_user.used_space = float(current_user.used_space) + file_size
 
 	file_obj = File(filename, file_size, file_owner_id, file_type, file_url)
 
 	if "image" in file_type:
-		user_small_folder = current_user.default_small_folder
-		file_small_folder = os.path.join(user_small_folder, filename)
-
-		file_width, file_height = resize_image(
-			pth, file_small_folder, SMALL_IMAGE_SIZE)
-
-		file_obj.set_small_url(
-			safe_join("/uploads/", filename) + "?small=1&download=1")
-		file_obj.set_width(file_width)
-		file_obj.set_height(file_height)
+		save_small_img(current_user, filename, pth, file_obj)
 
 	return file_obj
 
@@ -47,7 +38,7 @@ def update_file_info(file, file_size, user_folder, filename, current_user):
 
 	# отнимаем предыдущий размер файла от
 	# использованного пространства и прибавляем новый
-	new_space = int(current_user.used_space) - int(file_obj.size)
+	new_space = float(current_user.used_space) - float(file_obj.size)
 	current_user.used_space = new_space + file_size
 
 	pth = os.path.join(user_folder, filename)
@@ -58,12 +49,16 @@ def update_file_info(file, file_size, user_folder, filename, current_user):
 	file_obj.url = safe_join("/uploads/", filename) + "?download=1"
 
 	if "image" in file_obj._type:
-		user_small_folder = current_user.default_small_folder
-		file_small_url = os.path.join(user_small_folder, filename)
+		save_small_img(current_user, filename, pth, file_obj)
 
-		file_width, file_height = resize_image(
-			pth, file_small_url, SMALL_IMAGE_SIZE)
 
-		file_obj.set_small_url(safe_join("/uploads/", filename) + "?small=1&download=1")
-		file_obj.set_width(file_width)
-		file_obj.set_height(file_height)
+def save_small_img(current_user, filename, pth, file_obj):
+	user_small_folder = current_user.default_small_folder
+	file_small_folder = os.path.join(user_small_folder, filename)
+
+	file_width, file_height = resize_image(
+		pth, file_small_folder, SMALL_IMAGE_SIZE)
+
+	file_obj.set_small_url(safe_join("/uploads/", filename) + "?small=1&download=1")
+	file_obj.set_width(file_width)
+	file_obj.set_height(file_height)

@@ -31,6 +31,12 @@ class User(db.Model, UserMixin):
 	default_folder = db.Column(db.String(72), unique=True)
 	default_small_folder = db.Column(db.String(80), unique=True)
 
+	def set_password(self, password):
+		self.password_hash = generate_password_hash(password)
+
+	def check_password(self, password):
+		return check_password_hash(self.password_hash, password)
+
 	def __repr__(self):
 		return "<{0}: {1}>".format(self.user_id, self.username)
 
@@ -45,12 +51,6 @@ class User(db.Model, UserMixin):
 
 	def set_default_small_folder(self, folder):
 		self.default_small_folder = folder
-
-	def set_password(self, password):
-		self.password_hash = generate_password_hash(password)
-
-	def check_password(self, password):
-		return check_password_hash(self.password_hash, password)
 
 	def get_id(self):
 		return self.user_id
